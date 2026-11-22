@@ -1,16 +1,22 @@
 {
-  "id": "coolcode-tool-template",
-  "title": "CoolCode Tool Starter",
-  "description": "A browser-only example that trims lines and removes exact duplicates.",
-  "category": "security",
-  "tags": ["text", "lines", "duplicates"],
-  "icon": "scan-search",
-  "url": "/coolcode-tool-template/",
-  "source": "https://github.com/jsdyer/coolcode-tool-template",
+  "id": "anycastcompass",
+  "title": "Anycast Compass",
+  "description": "Which root-server instances do Canadian probes reach? Follow returned instance names and changes in a dated volunteer-probe sample.",
+  "category": "liminal-tools",
+  "tags": [
+    "anycastcompass",
+    "liminal-tools",
+    "public data",
+    "history"
+  ],
+  "icon": "history",
+  "url": "/anycastcompass/",
+  "source": "https://github.com/jsdyer/anycastcompass",
   "hosting": "project",
   "access": "browser",
   "data_info": {
-    "mode": "local",
-    "detail": "The browser reads the text you paste and compares its lines."
+    "mode": "snapshot",
+    "detail": "Daily one-hour samples from 50 Canadian RIPE Atlas probes across 13 IPv4 root servers.",
+    "cadence": "Daily"
   }
 }

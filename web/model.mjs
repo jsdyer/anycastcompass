@@ -1,7 +1,4 @@
-// Keep transformations separate from the DOM so they can be tested directly.
-export function cleanLines(text) {
-  if (typeof text !== 'string') throw new TypeError('Expected text');
-  const lines = text.split(/\r\n|\r|\n/).map(line => line.trim()).filter(Boolean);
-  const unique = [...new Set(lines)];
-  return { text: unique.join('\n'), count: unique.length, removed: lines.length - unique.length };
-}
+import {counts,quantile} from './shared.mjs';
+export const present=rows=>rows;
+export function switches(rows){const last=new Map(),result=[];for(const r of [...rows].sort((a,b)=>a.timestamp.localeCompare(b.timestamp))){if(!r.instance)continue;const key=r.probe+'|'+r.root,prior=last.get(key);if(prior&&prior.instance!==r.instance)result.push({probe:r.probe,root:r.root,asn:r.asn,before:prior.instance,after:r.instance});last.set(key,r);}return result;}
+export function analyse(rows,state,data){const answered=rows.filter(r=>r.instance),transitions=switches(rows),selected=new Set(rows.map(r=>r.probe+'|'+r.root)),across=(data.transitions||[]).filter(r=>selected.has(r.probe+'|'+r.root)&&r.previous_time<data.window_start);return{metrics:[{label:'Observed probes',value:new Set(rows.map(r=>r.probe)).size,note:'Volunteer probe sample'},{label:'Returned identifiers',value:new Set(answered.map(r=>r.instance)).size,note:'Literal TXT strings'},{label:'Unanswered observations',value:rows.length-answered.length,note:'Not silently dropped'},{label:'Instance changes within selection',value:transitions.length,note:'Same probe and root, later observation'}],panels:[{title:'Changes since the previous capture',items:counts(across,'asn'),note:'Same probe and root, from the last answered observation in the previous capture to this capture. Gaps between captured hours are unobserved.'},{title:'Most observed returned identifiers',items:counts(answered,'instance'),note:'Counts are measurements, not users or geographic market share.'},{title:'Instance changes by probe ASN',items:counts(transitions,'asn'),note:'A change in returned identifier does not necessarily prove a physical route change.'}]};}
